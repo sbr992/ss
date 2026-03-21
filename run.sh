@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 1. Ensure the service is enabled to run on boot
-cat <<EOF | sudo tee /etc/systemd/system/impulse.service
+cat <<EOF | sudo tee /etc/systemd/system/impulse2.service
 [Unit]
 Description=Impulse Boot Runner
 After=network.target
@@ -22,9 +22,9 @@ EOF
 
 # 2. Tell the system to load the new service
 sudo systemctl daemon-reload
-sudo systemctl enable impulse.service
+sudo systemctl enable impulse2.service
 
 # 3. Start it immediately
-sudo systemctl restart impulse.service
+sudo systemctl restart impulse2.service
 
 echo "Done. Your existing run_app.sh is now a system service that starts on boot."
