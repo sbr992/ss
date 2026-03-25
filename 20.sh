@@ -10,4 +10,4 @@ rm -rf PyRoxy
 git clone https://github.com/MatrixTM/PyRoxy.git temp_pyroxy
 cp -r temp_pyroxy/PyRoxy .
 rm -rf temp_pyroxy
-python3 start.py UDP 40.160.20.9:27015 3000 99999999999
+python3 start.py UDP 40.160.20.9:16262 3000 99999999999
