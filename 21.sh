@@ -1,3 +1,4 @@
+#!/bin/bash
 apt update && apt install -y python3 python3-pip git build-essential
 git clone https://github.com/MatrixTM/MHDDoS.git
 cd MHDDoS
